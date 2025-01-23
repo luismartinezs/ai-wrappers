@@ -6,8 +6,7 @@ import { Button } from "@/shared/components/ui/button"
 import { Textarea } from "@/shared/components/ui/textarea"
 import { Input } from "@/shared/components/ui/input"
 import { MarkdownContent } from "@/shared/components/markdown-content"
-import { chatCompletionAction } from "@/modules/openai/server/openai-actions"
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs"
+import { chatCompletionAction } from "@/shared/openai/server/openai-actions"
 
 export default function MultimodalChat() {
   const [input, setInput] = useState("")

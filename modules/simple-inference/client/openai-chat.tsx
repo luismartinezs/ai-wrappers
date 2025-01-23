@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { chatCompletionAction } from "@/modules/openai/server/openai-actions";
+import { chatCompletionAction } from "@/shared/openai/server/openai-actions";
 import { Card } from "@/shared/components/ui/card";
 import { MarkdownContent } from "@/shared/components/markdown-content";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";

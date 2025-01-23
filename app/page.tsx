@@ -32,7 +32,7 @@ export default function HomePage() {
             <h3 className="text-xl font-medium mb-2">Multimodal Inference</h3>
             <p className="text-gray-600 dark:text-gray-400">
               A multimodal interface that can process both text and images using
-              OpenAI's GPT-4 Vision model.
+              OpenAI's gpt-4o-mini model.
             </p>
           </Link>
         </div>
