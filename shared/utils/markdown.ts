@@ -13,7 +13,7 @@ export async function markdownToHtml(
   // Set safe defaults
   const defaultOptions: MarkedOptions = {
     gfm: true, // GitHub Flavored Markdown
-    breaks: true, // Convert \n to <br>
+    breaks: false, // Convert \n to <br>
     ...options
   }
 

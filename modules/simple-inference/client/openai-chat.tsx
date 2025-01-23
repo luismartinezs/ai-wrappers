@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { chatCompletionAction } from "@/modules/openai/server/openai-actions"
-import type { OpenAIMessage } from "@/modules/openai/server/openai-actions"
-import { Card } from "@/shared/components/ui/card"
-import { markdownToHtml } from "@/shared/utils/markdown"
+import { useState } from "react";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { chatCompletionAction } from "@/modules/openai/server/openai-actions";
+import type { OpenAIMessage } from "@/modules/openai/server/openai-actions";
+import { Card } from "@/shared/components/ui/card";
+import { markdownToHtml } from "@/shared/utils/markdown";
 
 const SAMPLE_QUERIES = [
   "What are some effective ways to reduce stress and anxiety?",
@@ -17,46 +17,46 @@ const SAMPLE_QUERIES = [
   "Can you explain the basics of climate change and its effects?",
   "What are some popular traditional dishes from different cultures?",
   "How do electric vehicles work and impact the environment?",
-]
+];
 
 export function OpenAIChat() {
-  const [input, setInput] = useState("")
-  const [response, setResponse] = useState("")
-  const [parsedResponse, setParsedResponse] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [input, setInput] = useState("");
+  const [response, setResponse] = useState("");
+  const [parsedResponse, setParsedResponse] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [sampleQueries] = useState(() => {
-    const shuffled = [...SAMPLE_QUERIES].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 3)
-  })
+    const shuffled = [...SAMPLE_QUERIES].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  });
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!input.trim() || isLoading) return
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const messages: OpenAIMessage[] = [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: input }
-      ]
+        { role: "user", content: input },
+      ];
 
-      const result = await chatCompletionAction(messages)
+      const result = await chatCompletionAction(messages);
 
       if (result.isSuccess) {
-        setResponse(result.data.message.content)
+        setResponse(result.data.message.content);
         // Parse markdown to HTML
-        const html = await markdownToHtml(result.data.message.content)
-        setParsedResponse(html)
+        const html = await markdownToHtml(result.data.message.content);
+        setParsedResponse(html);
       } else {
-        setResponse(`Error: ${result.message}`)
-        setParsedResponse(`Error: ${result.message}`)
+        setResponse(`Error: ${result.message}`);
+        setParsedResponse(`Error: ${result.message}`);
       }
     } catch (error) {
-      const errorMessage = "An error occurred while processing your request."
-      setResponse(errorMessage)
-      setParsedResponse(errorMessage)
+      const errorMessage = "An error occurred while processing your request.";
+      setResponse(errorMessage);
+      setParsedResponse(errorMessage);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -84,9 +84,9 @@ export function OpenAIChat() {
             tabIndex={0}
             onClick={() => setInput(query)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                setInput(query)
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setInput(query);
               }
             }}
             aria-label={`Use sample question: ${query}`}
@@ -97,13 +97,11 @@ export function OpenAIChat() {
       </div>
 
       {response && (
-        <div className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 prose dark:prose-invert max-w-none">
-          <div
-            className="whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: parsedResponse }}
-          />
-        </div>
+        <div
+          className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 prose dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: parsedResponse }}
+        />
       )}
     </div>
-  )
+  );
 }
