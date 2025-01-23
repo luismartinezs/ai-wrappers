@@ -6,6 +6,7 @@ import { Input } from "@/shared/components/ui/input"
 import { chatCompletionAction } from "@/modules/openai/server/openai-actions"
 import type { OpenAIMessage } from "@/modules/openai/server/openai-actions"
 import { Card } from "@/shared/components/ui/card"
+import { markdownToHtml } from "@/shared/utils/markdown"
 
 const SAMPLE_QUERIES = [
   "What are some effective ways to reduce stress and anxiety?",
@@ -21,6 +22,7 @@ const SAMPLE_QUERIES = [
 export function OpenAIChat() {
   const [input, setInput] = useState("")
   const [response, setResponse] = useState("")
+  const [parsedResponse, setParsedResponse] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [sampleQueries] = useState(() => {
     const shuffled = [...SAMPLE_QUERIES].sort(() => Math.random() - 0.5)
@@ -42,11 +44,17 @@ export function OpenAIChat() {
 
       if (result.isSuccess) {
         setResponse(result.data.message.content)
+        // Parse markdown to HTML
+        const html = await markdownToHtml(result.data.message.content)
+        setParsedResponse(html)
       } else {
         setResponse(`Error: ${result.message}`)
+        setParsedResponse(`Error: ${result.message}`)
       }
     } catch (error) {
-      setResponse("An error occurred while processing your request.")
+      const errorMessage = "An error occurred while processing your request."
+      setResponse(errorMessage)
+      setParsedResponse(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -71,8 +79,17 @@ export function OpenAIChat() {
         {sampleQueries.map((query, index) => (
           <Card
             key={index}
-            className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            role="button"
+            tabIndex={0}
             onClick={() => setInput(query)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                setInput(query)
+              }
+            }}
+            aria-label={`Use sample question: ${query}`}
           >
             <p className="text-sm text-gray-600 dark:text-gray-300">{query}</p>
           </Card>
@@ -80,8 +97,11 @@ export function OpenAIChat() {
       </div>
 
       {response && (
-        <div className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
-          <p className="whitespace-pre-wrap">{response}</p>
+        <div className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 prose dark:prose-invert max-w-none">
+          <div
+            className="whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: parsedResponse }}
+          />
         </div>
       )}
     </div>

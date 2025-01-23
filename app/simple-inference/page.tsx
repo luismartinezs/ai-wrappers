@@ -1,5 +1,11 @@
-import { OpenAIChat } from "@/modules/openai/client/openai-chat"
+"use client"
+import dynamic from 'next/dynamic'
 import { PageWrapper } from "@/shared/components/page-wrapper"
+
+const OpenAIChat = dynamic(
+  () => import('@/modules/simple-inference/client/openai-chat').then(mod => mod.OpenAIChat),
+  { ssr: false }
+)
 
 export default function BasicChatPage() {
   return (
