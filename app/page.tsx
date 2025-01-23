@@ -35,6 +35,14 @@ export default function HomePage() {
               OpenAI's gpt-4o-mini model.
             </p>
           </Link>
+
+          <Link href="/landing-page-builder" variant="card">
+            <h3 className="text-xl font-medium mb-2">Landing Page Builder</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              A landing page builder that can generate a landing page based on
+              user requirements.
+            </p>
+          </Link>
         </div>
       </div>
     </PageWrapper>

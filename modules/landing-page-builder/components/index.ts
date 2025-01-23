@@ -1,0 +1,8 @@
+export { Hero } from "./hero"
+export { ValueProposition } from "./value-proposition"
+export { Features } from "./features"
+export { Testimonials } from "./testimonials"
+export { CallToAction } from "./call-to-action"
+export { Pricing } from "./pricing"
+export { FAQ } from "./faq"
+export { Footer } from "./footer"

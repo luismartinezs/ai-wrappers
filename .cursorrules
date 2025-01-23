@@ -90,6 +90,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - Use divs instead of other html tags unless otherwise specified
 - Separate the main parts of a component's html with an extra blank line for visual spacing
 - Always tag a component with either `use server` or `use client` at the top, including layouts and pages
+- Install shadcn components using `pnpm dlx shadcn@latest add <component-name>`
 
 ##### Organization
 
