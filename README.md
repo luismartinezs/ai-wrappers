@@ -4,7 +4,7 @@ To do:
 
 - [x] Simple inference
 - [x] Multimodal inference
-- [ ] landing builder
-  - [ ] input: landing page user requirements
-  - [ ] output: JSON with content and component names
+- [x] landing builder
+  - [x] input: landing page user requirements
+  - [x] output: JSON with content and component names
 - [ ] RAG: https://github.com/hisachin/chathive
