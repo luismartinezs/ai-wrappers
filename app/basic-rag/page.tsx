@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { PageWrapper } from "@/shared/components/page-wrapper"
-import { RagLayout } from "@/modules/basic-rag/components/rag-layout"
+import { RagLayout } from "@/modules/basic-rag/client/rag-layout"
 import { Button } from "@/shared/components/ui/button"
 
 export default function BasicRagPage() {

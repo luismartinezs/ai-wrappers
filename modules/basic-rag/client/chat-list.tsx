@@ -4,7 +4,7 @@ import React from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "@/shared/components/ui/button"
 import { Plus, MessageSquare, Trash2 } from "lucide-react"
-import { useRag } from "../context/rag-context"
+import { useRag } from "./rag-context"
 import { SerializedRagChat } from "../models/chat"
 import { getChatsAction, deleteChatAction } from "../server/chat-actions"
 

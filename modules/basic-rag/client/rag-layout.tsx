@@ -1,8 +1,8 @@
 "use client"
 
 import { RagSettings } from "./rag-settings"
-import { BasicRagChat } from "../client/basic-rag-chat"
-import { RagProvider } from "../context/rag-context"
+import { BasicRagChat } from "./basic-rag-chat"
+import { RagProvider } from "./rag-context"
 
 export function RagLayout() {
   return (

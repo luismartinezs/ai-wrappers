@@ -54,6 +54,15 @@ Follow these rules when building the app.
 - Use kebab case for all files and folders unless otherwise specified
 - Don't update shadcn components unless otherwise specified
 
+#### Module Folder Structure Rules
+
+- Within a module folder, avoid using subfolders that are not `client`, `server`, or a submodule
+- Put client components in `client` folder
+- Put server components in `server` folder
+- Put isomorphic code in the root of the module
+- Put submodules in `submodule_name` folder
+- Submodules recursively follow the same rules
+
 #### Env Rules
 
 - If you update environment variables, update the `.env.example` file
@@ -89,7 +98,8 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 
 - Use divs instead of other html tags unless otherwise specified
 - Separate the main parts of a component's html with an extra blank line for visual spacing
-- Always tag a component with either `use server` or `use client` at the top, including layouts and pages
+- Always tag a client component with `use client` at the top, including layouts and pages
+- Server components do not need to be tagged with `use server`, including layouts and pages
 - Install shadcn components using `pnpm dlx shadcn@latest add <component-name>`
 
 ##### Organization

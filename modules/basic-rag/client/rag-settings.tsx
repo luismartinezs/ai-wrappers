@@ -4,11 +4,12 @@ import React from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
-import { Plus, Trash2, Check } from "lucide-react"
+import { Plus, Trash2, Check, Upload } from "lucide-react"
 import { getNamespacesAction, createNamespaceAction, deleteNamespaceAction } from "../server/namespace-actions"
 import { SerializedRagNamespace } from "../models/namespace"
-import { useRag } from "../context/rag-context"
+import { useRag } from "./rag-context"
 import { ChatList } from "./chat-list"
+import Link from "next/link"
 
 export function RagSettings() {
   const [namespaces, setNamespaces] = React.useState<SerializedRagNamespace[]>([])
@@ -78,7 +79,14 @@ export function RagSettings() {
     <aside className="w-64 border-r h-[calc(100vh-4rem)] p-4 flex flex-col">
       <div className="flex flex-col flex-1 space-y-6">
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Namespaces</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Namespaces</h2>
+            <Link href="/basic-rag/document-upload">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
 
           <form onSubmit={handleCreateNamespace} className="flex gap-2">
             <Input
