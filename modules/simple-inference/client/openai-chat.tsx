@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { chatCompletionAction } from "@/modules/openai/server/openai-actions";
-import type { OpenAIMessage } from "@/modules/openai/server/openai-actions";
 import { Card } from "@/shared/components/ui/card";
-import { markdownToHtml } from "@/shared/utils/markdown";
+import { MarkdownContent } from "@/shared/components/markdown-content";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 
 const SAMPLE_QUERIES = [
   "What are some effective ways to reduce stress and anxiety?",
@@ -22,7 +22,6 @@ const SAMPLE_QUERIES = [
 export function OpenAIChat() {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState("");
-  const [parsedResponse, setParsedResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sampleQueries] = useState(() => {
     const shuffled = [...SAMPLE_QUERIES].sort(() => Math.random() - 0.5);
@@ -35,7 +34,7 @@ export function OpenAIChat() {
 
     setIsLoading(true);
     try {
-      const messages: OpenAIMessage[] = [
+      const messages: ChatCompletionMessageParam[] = [
         { role: "system", content: "You are a helpful assistant." },
         { role: "user", content: input },
       ];
@@ -43,18 +42,12 @@ export function OpenAIChat() {
       const result = await chatCompletionAction(messages);
 
       if (result.isSuccess) {
-        setResponse(result.data.message.content);
-        // Parse markdown to HTML
-        const html = await markdownToHtml(result.data.message.content);
-        setParsedResponse(html);
+        setResponse(result.data.choices[0].message.content || "");
       } else {
         setResponse(`Error: ${result.message}`);
-        setParsedResponse(`Error: ${result.message}`);
       }
     } catch (error) {
-      const errorMessage = "An error occurred while processing your request.";
-      setResponse(errorMessage);
-      setParsedResponse(errorMessage);
+      setResponse("An error occurred while processing your request.");
     } finally {
       setIsLoading(false);
     }
@@ -97,10 +90,9 @@ export function OpenAIChat() {
       </div>
 
       {response && (
-        <div
-          className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 prose dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: parsedResponse }}
-        />
+        <div className="mt-4 p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
+          <MarkdownContent content={response} />
+        </div>
       )}
     </div>
   );

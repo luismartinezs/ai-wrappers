@@ -2,8 +2,8 @@ This is a playground for AI wrappers
 
 To do:
 
-- [ ] Simple inference
-- [ ] Multimodal inference
+- [x] Simple inference
+- [x] Multimodal inference
 - [ ] landing builder
   - [ ] input: landing page user requirements
   - [ ] output: JSON with content and component names

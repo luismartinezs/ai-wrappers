@@ -27,6 +27,14 @@ export default function HomePage() {
               OpenAI's GPT models.
             </p>
           </Link>
+
+          <Link href="/multimodal-inference" variant="card">
+            <h3 className="text-xl font-medium mb-2">Multimodal Inference</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              A multimodal interface that can process both text and images using
+              OpenAI's GPT-4 Vision model.
+            </p>
+          </Link>
         </div>
       </div>
     </PageWrapper>
