@@ -2,6 +2,7 @@
 
 import { Link } from "@/shared/components/link"
 import { cn } from "@/shared/utils/cn"
+import { AuthButton } from "@/modules/auth/client/auth-button"
 
 export function Header() {
   return (
@@ -12,9 +13,8 @@ export function Header() {
             <span className="text-xl font-bold">AI Wrappers</span>
           </Link>
 
-          {/* Navigation can be added here later */}
-          <nav className="space-x-4">
-            {/* Example: <Link href="/docs">Docs</Link> */}
+          <nav className="flex items-center space-x-4">
+            <AuthButton />
           </nav>
         </div>
       </div>

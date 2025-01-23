@@ -43,6 +43,14 @@ export default function HomePage() {
               user requirements.
             </p>
           </Link>
+
+          <Link href="/basic-rag" variant="card">
+            <h3 className="text-xl font-medium mb-2">Basic RAG Demo</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              A demonstration of Retrieval Augmented Generation (RAG) using vector embeddings
+              to enhance AI responses with relevant context.
+            </p>
+          </Link>
         </div>
       </div>
     </PageWrapper>
