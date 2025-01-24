@@ -94,12 +94,12 @@ export function BasicRagChat() {
 
   if (!selectedNamespace) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-center p-8">
-        <div className="bg-muted p-4 rounded-full mb-4">
-          <MessageSquarePlus className="h-8 w-8 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center h-full text-center p-4 sm:p-8">
+        <div className="bg-muted p-3 sm:p-4 rounded-full mb-3 sm:mb-4">
+          <MessageSquarePlus className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground" />
         </div>
-        <h2 className="text-lg font-semibold mb-2">No Namespace Selected</h2>
-        <p className="text-sm text-muted-foreground max-w-sm">
+        <h2 className="text-base sm:text-lg font-semibold mb-2">No Namespace Selected</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-[280px] sm:max-w-sm">
           Each namespace represents a separate context for your conversations. Select or create a namespace to start chatting.
         </p>
       </div>
@@ -108,15 +108,15 @@ export function BasicRagChat() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 p-4 overflow-y-auto">
+      <div className="flex-1 p-2 sm:p-4 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground px-4">
               No messages yet. Start a conversation by typing a message below.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {messages.map((msg) => (
               <div
                 key={msg._id}
@@ -124,24 +124,23 @@ export function BasicRagChat() {
                   msg.sender === "user" ? "items-end" : "items-start"
                 }`}
               >
-                <div
-                  className={`max-w-[80%] rounded-lg p-4 ${
-                    msg.sender === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
-                  }`}
-                >
-                  <MarkdownContent content={msg.content} />
+                <div className="max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-lg p-2 sm:p-4 bg-muted">
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mb-1">
+                    {msg.sender === "user" ? "You" : "Assistant"}
+                  </div>
+                  <div className="text-sm sm:text-base">
+                    <MarkdownContent content={msg.content} />
+                  </div>
                   {msg.sourceDocs && msg.sourceDocs.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+                    <div className="mt-2 pt-2 border-t border-border/50 text-[10px] sm:text-xs text-muted-foreground">
                       <p className="font-semibold">Sources:</p>
-                      <ul className="list-disc list-inside">
+                      <div className="space-y-0.5 sm:space-y-1">
                         {msg.sourceDocs.map((doc, index) => (
-                          <li key={index}>
+                          <div key={index} className="text-[10px] sm:text-xs break-all">
                             {doc.filename} - {doc.source}
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -152,17 +151,21 @@ export function BasicRagChat() {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t">
-        <div className="flex gap-4">
+      <form onSubmit={handleSubmit} className="p-2 sm:p-4 border-t">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           <Textarea
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Type your message..."
-            className="flex-1"
+            className="flex-1 text-sm sm:text-base min-h-[80px] sm:min-h-[unset]"
           />
-          <Button type="submit" disabled={isLoading || !message.trim()}>
+          <Button
+            type="submit"
+            disabled={isLoading || !message.trim()}
+            className="w-full sm:w-auto"
+          >
             {isLoading ? "Sending..." : "Send"}
           </Button>
         </div>

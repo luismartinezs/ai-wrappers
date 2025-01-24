@@ -5,6 +5,7 @@ import { getCollection } from "@/modules/mongodb/server/mongodb-utils"
 import { CreateRagMessageInput, RAG_MESSAGES_COLLECTION, SerializedRagMessage } from "../models/message"
 import { retrieveAndGenerateAction } from "./rag-actions"
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions"
+import { updateChatTitleAction } from "./chat-actions"
 
 export async function createMessageAction(
   input: CreateRagMessageInput
@@ -67,6 +68,11 @@ export async function createMessageAction(
 
     if (!aiResult.insertedId) {
       throw new Error("Failed to insert AI response")
+    }
+
+    // 6. Update chat title if this is the first message exchange
+    if (chatHistory.length <= 2) {
+      await updateChatTitleAction(input.userEmail, input.chatId, formattedHistory)
     }
 
     const createdMessage = {

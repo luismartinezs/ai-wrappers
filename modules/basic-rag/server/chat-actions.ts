@@ -3,6 +3,8 @@
 import { getCollection } from "@/modules/mongodb/server/mongodb-utils"
 import { RAG_CHATS_COLLECTION, SerializedRagChat } from "../models/chat"
 import { ObjectId } from "mongodb"
+import { createChatCompletion } from "@/shared/openai/server/openai-lib"
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions"
 
 interface RagChat {
   _id: ObjectId
@@ -35,6 +37,37 @@ export async function getChatsAction(userEmail: string, namespaceId: string) {
     return {
       success: false as const,
       message: "Failed to get chats"
+    }
+  }
+}
+
+async function generateChatTitle(messages: ChatCompletionMessageParam[]): Promise<string> {
+  try {
+    const prompt: ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: "You are a helpful assistant that generates concise, descriptive titles for chat conversations. Generate a title that captures the main topic or intent of the conversation. Keep it under 6 words."
+      },
+      ...messages
+    ]
+
+    const completion = await createChatCompletion(prompt)
+    return completion.choices[0].message.content?.trim() || "New Chat"
+  } catch (error) {
+    console.error("Error generating chat title:", error)
+    return "New Chat"
+  }
+}
+
+export async function updateChatTitleAction(userEmail: string, chatId: string, messages: ChatCompletionMessageParam[]) {
+  try {
+    const title = await generateChatTitle(messages)
+    return await updateChatAction(userEmail, chatId, title)
+  } catch (error) {
+    console.error("Error updating chat title:", error)
+    return {
+      success: false as const,
+      message: "Failed to update chat title"
     }
   }
 }
