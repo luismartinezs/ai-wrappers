@@ -3,7 +3,7 @@
 import { pineconeClient } from "./pinecone-client"
 import { Index } from "@pinecone-database/pinecone"
 
-export const PINECONE_INDEX_NAME = "basic-rag"
+export const PINECONE_INDEX_NAME = process.env.PINECONE_INDEX ?? "basic-rag"
 
 // Dimensions: Set to 1536 (required for OpenAI embeddings) or Set to 384 (required for HiggingFace embeddings)
 export async function createPineconeIndex(dimension: number = 1536) {

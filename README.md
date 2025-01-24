@@ -9,3 +9,5 @@ To do:
   - [x] output: JSON with content and component names
 - [ ] RAG: https://github.com/hisachin/chathive
 - [ ] https://www.youtube.com/watch?v=VKPngyO0iKg&ab_channel=AdamLucek
+- [ ] RAG virtual assistant with reasoning
+- [ ] tax advisor: reasoning + online research steps, to recursively fill knowledge gaps

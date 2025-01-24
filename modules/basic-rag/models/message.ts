@@ -4,7 +4,11 @@ export interface RagDocument {
   pageContent: string
   metadata: {
     source: string
+    filename: string
   }
+  text: string
+  source: string
+  filename: string
 }
 
 export interface RagMessageModel extends Document {
