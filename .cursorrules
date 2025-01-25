@@ -15,8 +15,8 @@ This is a web app template.
 ## Tech Stack
 
 - Frontend: Next.js, Tailwind, Shadcn, Framer Motion
-- Backend: Server Actions, Postgres, Drizzle ORM
-- Auth: Clerk
+- Backend: Server Actions, MongoDB, mongoose
+- Auth: NextAuth
 - Payments: Stripe
 - Analytics: Umami
 - Deployment: Vercel
@@ -215,7 +215,7 @@ export default function ExampleClientComponent({
 
 Follow these rules when working on the backend.
 
-It uses Postgres, Drizzle ORM and Server Actions.
+It uses MongoDB, mongoose and Server Actions.
 
 #### General Rules
 
@@ -226,7 +226,8 @@ It uses Postgres, Drizzle ORM and Server Actions.
 #### Schemas
 
 - Name files like `example-schema.ts`
-- All schemas should go in `@/modules/db/`
+- All shared db utils, schemas and code should go in `@/modules/mongodb/`
+- All db code related to a specific module should go in the corresponding module folder
 - If using a userId, always use `userId: text("user_id").notNull()`
 - Always include createdAt and updatedAt columns in all tables
 - Make sure to cascade delete when necessary
@@ -439,12 +440,7 @@ export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
 
 Follow these rules when working on auth.
 
-It uses Clerk for authentication.
-
-#### General Rules
-
-- Import the auth helper with `import { auth } from "@clerk/nextjs/server"` in server components
-- await the auth helper in server actions
+It uses NextAuth for authentication.
 
 ### Payments Rules
 

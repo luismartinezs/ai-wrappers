@@ -80,4 +80,4 @@ UserSchema.methods.isResetTokenValid = function (token: string): boolean {
 
 // Check if the model exists before creating a new one
 // This is needed for Next.js hot reloading
-export const User = models.User || model<UserDocument>("User", UserSchema, process.env.MONGODB_DB_NAME || "ai-wrappers")
+export const User = models.User || model<UserDocument>("User", UserSchema)

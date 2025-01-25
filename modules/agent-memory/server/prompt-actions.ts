@@ -9,22 +9,24 @@ const openai = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY
 })
 
+export interface Message {
+  role: "system" | "user" | "assistant"
+  content: string
+}
+
 export interface PromptResponse {
   content: string
 }
 
 export async function sendPromptAction(
-  prompt: string,
+  messages: Message[],
   systemPrompt: string = "You are a helpful assistant."
 ): Promise<ActionState<PromptResponse>> {
   try {
-    logger("prompt-actions", "Sending prompt to DeepSeek", { prompt })
+    logger("prompt-actions", "Sending messages to DeepSeek", { messages })
 
     const completion = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt }
-      ],
+      messages: [{ role: "system", content: systemPrompt }, ...messages],
       model: "deepseek-chat"
     })
 
@@ -38,7 +40,7 @@ export async function sendPromptAction(
       data: { content }
     }
   } catch (error) {
-    logger("prompt-actions", "Error sending prompt to DeepSeek", { error })
+    logger("prompt-actions", "Error sending messages to DeepSeek", { error })
     return {
       isSuccess: false,
       message: "Failed to get response from DeepSeek"
