@@ -9,7 +9,7 @@ import { getNamespacesAction, createNamespaceAction, deleteNamespaceAction } fro
 import { SerializedRagNamespace } from "../models/namespace"
 import { useRag } from "./rag-context"
 import { ChatList } from "./chat-list"
-import Link from "next/link"
+import { Link } from "@/shared/components/link"
 
 export function RagSettings() {
   const [namespaces, setNamespaces] = React.useState<SerializedRagNamespace[]>([])

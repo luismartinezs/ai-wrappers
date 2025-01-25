@@ -51,6 +51,14 @@ export default function HomePage() {
               to enhance AI responses with relevant context.
             </p>
           </Link>
+
+          <Link href="/agent-memory" variant="card">
+            <h3 className="text-xl font-medium mb-2">Agent Memory</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              An experimental interface for managing and analyzing AI agent memory systems,
+              enabling persistent context and learning across conversations.
+            </p>
+          </Link>
         </div>
       </div>
     </PageWrapper>

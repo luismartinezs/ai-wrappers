@@ -7,7 +7,8 @@ To do:
 - [x] landing builder
   - [x] input: landing page user requirements
   - [x] output: JSON with content and component names
-- [ ] RAG: https://github.com/hisachin/chathive
-- [ ] https://www.youtube.com/watch?v=VKPngyO0iKg&ab_channel=AdamLucek
+- [x] RAG: https://github.com/hisachin/chathive
+- [ ] https://www.youtube.com/watch?v=VKPngyO0iKg&ab_channel=AdamLucek agent memory
 - [ ] RAG virtual assistant with reasoning
 - [ ] tax advisor: reasoning + online research steps, to recursively fill knowledge gaps
+- [ ] FE calls node BE, BE calls python fnc

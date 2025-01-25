@@ -1,15 +1,31 @@
 "use client"
 
 import React from "react"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { Button } from "@/shared/components/ui/button"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
+import { logger } from "@/shared/utils/logger"
 
 export function AuthButton() {
   const { data: session, status } = useSession()
   const searchParams = useSearchParams()
+  const router = useRouter()
   const isLoading = status === "loading"
   const next = searchParams.get("next") || "/"
+
+  // Debug session state
+  React.useEffect(() => {
+    logger("auth", "Session state in AuthButton", {
+      status,
+      session: session ? {
+        user: {
+          id: session.user?.id,
+          email: session.user?.email,
+          name: session.user?.name
+        }
+      } : null
+    })
+  }, [session, status])
 
   if (isLoading) {
     return (
@@ -35,9 +51,9 @@ export function AuthButton() {
   return (
     <Button
       variant="outline"
-      onClick={() => signIn("google", { callbackUrl: next })}
+      onClick={() => router.push(`/auth/signin?next=${encodeURIComponent(next)}`)}
     >
-      Sign in with Google
+      Sign in
     </Button>
   )
 }

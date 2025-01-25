@@ -1,26 +1,25 @@
 "use server"
 
-import { Collection, Db, Document } from "mongodb"
-import { clientPromise } from "./mongodb-client"
+import mongoose from "mongoose"
+import { connectDB } from "./mongodb-client"
 
-export async function getDb(dbName?: string): Promise<Db> {
-  const client = await clientPromise
-  return client.db(dbName || process.env.MONGODB_DB_NAME)
+export async function getDb(): Promise<mongoose.Connection> {
+  await connectDB()
+  return mongoose.connection
 }
 
-export async function getCollection<T extends Document = Document>(
+export async function getCollection<T extends mongoose.Document>(
   collectionName: string,
-  dbName?: string
-): Promise<Collection<T>> {
-  const db = await getDb(dbName)
-  return db.collection<T>(collectionName)
+): Promise<mongoose.Collection<T>> {
+  const connection = await getDb()
+  return connection.collection(collectionName)
 }
 
 export async function ping(): Promise<boolean> {
   try {
-    const client = await clientPromise
-    await client.db().command({ ping: 1 })
-    return true
+    await connectDB()
+    const status = mongoose.connection.readyState === 1
+    return status
   } catch (error) {
     console.error("MongoDB ping failed:", error)
     return false

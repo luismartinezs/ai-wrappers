@@ -1,7 +1,6 @@
 "use client"
 
 import { Link } from "@/shared/components/link"
-import { cn } from "@/shared/utils/cn"
 import { AuthButton } from "@/modules/auth/client/auth-button"
 
 export function Header() {

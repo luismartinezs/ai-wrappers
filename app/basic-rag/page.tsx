@@ -30,7 +30,7 @@ export default function BasicRagPage() {
             Please sign in to access the Basic RAG Demo
           </p>
           <Button
-            onClick={() => router.push("/login?next=/basic-rag")}
+            onClick={() => router.push("/auth/signin?next=/basic-rag")}
           >
             Sign In to Continue
           </Button>
