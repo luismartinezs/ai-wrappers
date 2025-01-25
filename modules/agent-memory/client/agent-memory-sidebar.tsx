@@ -39,11 +39,13 @@ export function AgentMemorySidebar({
         logger("agent-memory-sidebar", "Loaded conversations", { count: result.data.length })
         setConversations(result.data)
       } else {
-        logger("agent-memory-sidebar", "Failed to load conversations", { error: result.message }, "error")
+        logger("agent-memory-sidebar", "Failed to load conversations", { message: result.message })
         setConversations([])
       }
     } catch (error) {
-      logger("agent-memory-sidebar", "Error loading conversations", { error }, "error")
+      logger("agent-memory-sidebar", "Load error", {
+        message: error instanceof Error ? error.message : 'Unknown error'
+      })
       setConversations([])
     }
     onListRefreshed?.()
@@ -51,14 +53,14 @@ export function AgentMemorySidebar({
 
   // Initial load
   useEffect(() => {
-    logger("agent-memory-sidebar", "Initial load effect triggered")
+    logger("agent-memory-sidebar", "Initial load")
     loadConversations()
   }, [loadConversations])
 
   // Refresh when requested
   useEffect(() => {
     if (shouldRefreshList) {
-      logger("agent-memory-sidebar", "Refresh requested")
+      logger("agent-memory-sidebar", "Refreshing list")
       loadConversations()
     }
   }, [shouldRefreshList, loadConversations])
@@ -66,7 +68,7 @@ export function AgentMemorySidebar({
   const handleConversationClick = useCallback((id: string) => {
     logger("agent-memory-sidebar", "Conversation clicked", {
       id,
-      isCurrent: id === currentConversationId
+      current: currentConversationId || 'none'
     })
     onSelectConversation(id)
   }, [currentConversationId, onSelectConversation])

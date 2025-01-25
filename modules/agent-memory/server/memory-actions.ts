@@ -2,7 +2,7 @@
 
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/modules/auth/server/auth-options"
-import { Conversation, IMessage } from "./memory-schema"
+import { Conversation, IMessage, IConversation } from "./memory-schema"
 import { connectDB } from "@/modules/mongodb/server/mongodb-client"
 import { ActionState } from "@/shared/types/actions-types"
 import { sendPromptAction, Message as LLMMessage } from "./prompt-actions"
@@ -98,9 +98,16 @@ export async function addMessageAction(
   }
 }
 
+export interface SerializedMessage {
+  role: "user" | "assistant"
+  content: string
+  createdAt?: string
+  updatedAt?: string
+}
+
 export async function getConversationAction(
   conversationId: string
-): Promise<ActionState<IMessage[]>> {
+): Promise<ActionState<SerializedMessage[]>> {
   try {
     logger("memory-actions", "Starting getConversationAction", { conversationId })
 
@@ -126,28 +133,30 @@ export async function getConversationAction(
     const conversation = await Conversation.findOne({
       _id: conversationId,
       userId: session.user.id
-    })
+    }).lean<IConversation>()
 
     if (!conversation) {
       logger("memory-actions", "Conversation not found", { conversationId })
       return { isSuccess: false, message: "Conversation not found" }
     }
 
+    // Ensure messages are properly serialized
+    const serializedMessages = conversation.messages.map((msg: IMessage) => ({
+      role: msg.role,
+      content: msg.content,
+      createdAt: msg.createdAt?.toISOString(),
+      updatedAt: msg.updatedAt?.toISOString()
+    }))
+
     logger("memory-actions", "Retrieved conversation", {
       conversationId,
-      messageCount: conversation.messages.length,
-      messages: conversation.messages.map((m: IMessage) => ({
-        role: m.role,
-        contentLength: m.content.length,
-        hasCreatedAt: !!m.createdAt,
-        hasUpdatedAt: !!m.updatedAt
-      }))
+      messageCount: serializedMessages.length
     })
 
     return {
       isSuccess: true,
       message: "Conversation retrieved",
-      data: conversation.messages
+      data: serializedMessages
     }
   } catch (error) {
     logger("memory-actions", "Error getting conversation", { error, conversationId })
