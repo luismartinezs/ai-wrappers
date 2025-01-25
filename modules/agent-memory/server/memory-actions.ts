@@ -102,6 +102,8 @@ export async function getConversationAction(
   conversationId: string
 ): Promise<ActionState<IMessage[]>> {
   try {
+    logger("memory-actions", "Starting getConversationAction", { conversationId })
+
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       logger("memory-actions", "Unauthorized attempt to get conversation")
@@ -133,7 +135,13 @@ export async function getConversationAction(
 
     logger("memory-actions", "Retrieved conversation", {
       conversationId,
-      messageCount: conversation.messages.length
+      messageCount: conversation.messages.length,
+      messages: conversation.messages.map((m: IMessage) => ({
+        role: m.role,
+        contentLength: m.content.length,
+        hasCreatedAt: !!m.createdAt,
+        hasUpdatedAt: !!m.updatedAt
+      }))
     })
 
     return {
@@ -148,7 +156,7 @@ export async function getConversationAction(
 }
 
 export async function listConversationsAction(): Promise<
-  ActionState<Array<{ id: string; title: string; lastMessageAt: Date }>>
+  ActionState<Array<{ id: string; title: string; lastMessageAt: string }>>
 > {
   try {
     const session = await getServerSession(authOptions)
@@ -186,7 +194,7 @@ export async function listConversationsAction(): Promise<
       data: conversations.map((c) => ({
         id: c._id.toString(),
         title: c.title,
-        lastMessageAt: c.lastMessageAt
+        lastMessageAt: c.lastMessageAt.toISOString()
       }))
     }
   } catch (error) {

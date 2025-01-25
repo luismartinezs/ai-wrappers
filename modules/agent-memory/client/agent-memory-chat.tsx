@@ -6,39 +6,48 @@ import { Chat } from "@/shared/chat/client/chat"
 import { Message } from "@/shared/chat/types/chat-types"
 import { createConversationAction, getConversationAction, sendMessageAction } from "../server/memory-actions"
 import { AgentMemorySidebar } from "./agent-memory-sidebar"
+import { logger } from "@/shared/utils/logger"
 
 export function AgentMemoryChat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [conversationId, setConversationId] = useState<string>()
-  const [isLoadingConversation, setIsLoadingConversation] = useState(false)
   const [shouldRefreshList, setShouldRefreshList] = useState(false)
 
-  // Load conversation when selected
-  const loadMessages = useCallback(async (id: string) => {
-    try {
-      setIsLoadingConversation(true)
-      const result = await getConversationAction(id)
-      if (result.isSuccess) {
+  // Load messages when conversation ID changes
+  useEffect(() => {
+    async function loadConversation() {
+      if (!conversationId) {
+        setMessages([])
+        return
+      }
+
+      try {
+        setIsLoading(true)
+        const result = await getConversationAction(conversationId)
+
+        if (!result.isSuccess || !Array.isArray(result.data)) {
+          setMessages([])
+          return
+        }
+
         setMessages(
           result.data.map((msg) => ({
             id: uuidv4(),
             role: msg.role,
             content: msg.content,
-            createdAt: new Date(msg.createdAt)
+            createdAt: msg.createdAt ? new Date(msg.createdAt) : new Date()
           }))
         )
-      } else {
-        console.error("Failed to load conversation:", result.message)
+      } catch (error) {
         setMessages([])
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Error loading conversation:", error)
-      setMessages([])
-    } finally {
-      setIsLoadingConversation(false)
     }
-  }, [])
+
+    loadConversation()
+  }, [conversationId])
 
   const handleSendMessage = async (content: string) => {
     try {
@@ -49,7 +58,6 @@ export function AgentMemoryChat() {
       if (!currentConversationId) {
         const result = await createConversationAction()
         if (!result.isSuccess) {
-          console.error("Failed to create conversation")
           return
         }
         currentConversationId = result.data.id
@@ -71,13 +79,13 @@ export function AgentMemoryChat() {
           id: uuidv4(),
           role: userMessage.role,
           content: userMessage.content,
-          createdAt: new Date(userMessage.createdAt)
+          createdAt: userMessage.createdAt ? new Date(userMessage.createdAt) : new Date()
         },
         {
           id: uuidv4(),
           role: assistantMessage.role,
           content: assistantMessage.content,
-          createdAt: new Date(assistantMessage.createdAt)
+          createdAt: assistantMessage.createdAt ? new Date(assistantMessage.createdAt) : new Date()
         }
       ])
 
@@ -86,18 +94,16 @@ export function AgentMemoryChat() {
         setShouldRefreshList(true)
       }
     } catch (error) {
-      console.error("Error sending message:", error)
-      // You might want to show an error toast here
+      // Error already logged by server action
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleSelectConversation = useCallback(async (id: string) => {
-    if (id === conversationId || isLoadingConversation) return
+  const handleSelectConversation = useCallback((id: string) => {
+    if (id === conversationId || isLoading) return
     setConversationId(id)
-    await loadMessages(id)
-  }, [conversationId, isLoadingConversation, loadMessages])
+  }, [conversationId, isLoading])
 
   const handleNewChat = useCallback(() => {
     setConversationId(undefined)
@@ -116,7 +122,7 @@ export function AgentMemoryChat() {
       <div className="flex-1">
         <Chat
           messages={messages}
-          isLoading={isLoading || isLoadingConversation}
+          isLoading={isLoading}
           onSendMessage={handleSendMessage}
         />
       </div>

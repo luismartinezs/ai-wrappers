@@ -6,11 +6,12 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area"
 import { PlusCircle } from "lucide-react"
 import { listConversationsAction } from "../server/memory-actions"
 import { cn } from "@/shared/utils/cn"
+import { logger } from "@/shared/utils/logger"
 
 interface Conversation {
   id: string
   title: string
-  lastMessageAt: Date
+  lastMessageAt: string
 }
 
 interface AgentMemorySidebarProps {
@@ -32,15 +33,17 @@ export function AgentMemorySidebar({
 
   const loadConversations = useCallback(async () => {
     try {
+      logger("agent-memory-sidebar", "Loading conversations")
       const result = await listConversationsAction()
       if (result.isSuccess) {
+        logger("agent-memory-sidebar", "Loaded conversations", { count: result.data.length })
         setConversations(result.data)
       } else {
-        console.error("Failed to load conversations:", result.message)
+        logger("agent-memory-sidebar", "Failed to load conversations", { error: result.message }, "error")
         setConversations([])
       }
     } catch (error) {
-      console.error("Error loading conversations:", error)
+      logger("agent-memory-sidebar", "Error loading conversations", { error }, "error")
       setConversations([])
     }
     onListRefreshed?.()
@@ -48,15 +51,25 @@ export function AgentMemorySidebar({
 
   // Initial load
   useEffect(() => {
+    logger("agent-memory-sidebar", "Initial load effect triggered")
     loadConversations()
   }, [loadConversations])
 
   // Refresh when requested
   useEffect(() => {
     if (shouldRefreshList) {
+      logger("agent-memory-sidebar", "Refresh requested")
       loadConversations()
     }
   }, [shouldRefreshList, loadConversations])
+
+  const handleConversationClick = useCallback((id: string) => {
+    logger("agent-memory-sidebar", "Conversation clicked", {
+      id,
+      isCurrent: id === currentConversationId
+    })
+    onSelectConversation(id)
+  }, [currentConversationId, onSelectConversation])
 
   return (
     <div className="flex h-full w-80 flex-col border-r">
@@ -82,7 +95,7 @@ export function AgentMemorySidebar({
                 currentConversationId === conversation.id &&
                   "bg-muted hover:bg-muted"
               )}
-              onClick={() => onSelectConversation(conversation.id)}
+              onClick={() => handleConversationClick(conversation.id)}
             >
               <span className="truncate">{conversation.title}</span>
             </Button>

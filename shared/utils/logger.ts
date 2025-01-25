@@ -71,28 +71,29 @@ function safeStringify(obj: unknown, indent?: number): string {
   const seen = new WeakSet();
 
   const replacer = (key: string, value: unknown) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+    }
+
     if (value instanceof Error) {
       return {
         __error__: true,
         name: value.name,
         message: value.message,
-        stack: value.stack,
+        stack: value.stack?.split('\n').slice(0, 3).join('\n') // Only keep first 3 lines of stack
       };
     }
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) return '[Circular]';
-      seen.add(value);
-    }
+
     return value;
   };
 
   try {
     return JSON.stringify(obj, replacer, indent);
-  } catch (e) {
-    return JSON.stringify({
-      error: 'Log serialization failed',
-      details: e instanceof Error ? e.message : 'Unknown error',
-    });
+  } catch (err) {
+    return '[Unable to stringify value]';
   }
 }
 

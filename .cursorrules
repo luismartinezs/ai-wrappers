@@ -53,6 +53,7 @@ Follow these rules when building the app.
 - Use `@` to import anything from the app unless otherwise specified
 - Use kebab case for all files and folders unless otherwise specified
 - Don't update shadcn components unless otherwise specified
+- For logging, always use `shared/utils/logger.ts` if it is available
 
 #### Module Folder Structure Rules
 
