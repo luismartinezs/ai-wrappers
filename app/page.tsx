@@ -47,16 +47,25 @@ export default function HomePage() {
           <Link href="/basic-rag" variant="card">
             <h3 className="text-xl font-medium mb-2">Basic RAG Demo</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              A demonstration of Retrieval Augmented Generation (RAG) using vector embeddings
-              to enhance AI responses with relevant context.
+              A demonstration of Retrieval Augmented Generation (RAG) using
+              vector embeddings to enhance AI responses with relevant context.
             </p>
           </Link>
 
           <Link href="/agent-memory" variant="card">
             <h3 className="text-xl font-medium mb-2">Agent Memory</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              An experimental interface for managing and analyzing AI agent memory systems,
-              enabling persistent context and learning across conversations.
+              An experimental interface for managing and analyzing AI agent
+              memory systems, enabling persistent context and learning across
+              conversations.
+            </p>
+          </Link>
+
+          <Link href="/coscientist" variant="card">
+            <h3 className="text-xl font-medium mb-2">Coscientist</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              A demo of a coscientist that can answer questions and help with
+              tasks.
             </p>
           </Link>
         </div>
